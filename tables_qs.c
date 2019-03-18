@@ -1,61 +1,119 @@
-#include <stdio.h>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <conio.h>
 #include <stdlib.h>
-
-void swap(int *a, int *b)
+using namespace std;
+class stud
 {
-    int temp;
-    temp = *a;
-    *a = *b;
-    *b = temp;
-}
+public:
+    char name[20];
+    int regno;
 
-int partition(int arr[], int low, int high)
-{
-    int j, pivot, i;
-    pivot = arr[high];
-    i = low - 1;
-    for( j = low; j < high; j++)
-    {
-        if(arr[j] > pivot)
-        {
-            i++;
-            swap(&arr[i], &arr[j]);
-        }
-    }
-     swap(&arr[i + 1], &arr[high]);
-     return i+1;
-}
-
-void  quicks(int arr[], int low,int high)
-{
-	int pi;
-    if(low < high)
-    {
-        pi = partition(arr, low, high);
-        quicks(arr, low, pi-1);
-        quicks(arr, pi+1, high);
-    }
-
-}
-
+};
 
 int main()
 {
-    int n, k, s, t, u, arr[10], sum=0, c=0,q;
-    scanf("%d %d %d", &n, &k, &s);
-    for(t = 0; t < n; t++)
+    stud s[50], t[20];
+    int ch, i, n;
+    fstream fp1, fp2;
+    do
     {
-        scanf(" %d", &arr[t]);
-    }
-     q = k * s;
-    quicks(arr, 0, n-1);
-    for(u = 0; u < n; u++)
-    {
-        c++;
-        sum += arr[u];
-        if(sum >= q)
+        std::cout << " insrtion " << endl;
+        std::cout << "deletion " << endl;
+        std::cout << "updation " << endl;
+        std::cout << "exit " << endl;
+        std::cout << "choice " << endl;
+        std::cin >> ch;
+        switch(ch)
+        {
+        case 1:
+            cout << "creation " << endl;
+            fp1.open("old", ios::out | ios :: in );
+            cout << "enter the no of studs " << endl;
+            cin >> n;
+            for(i = 1; i <=n; i++)
+            {
+                cout << "regno:" << endl;
+                cin >> s[i].regno;
+                cout << "name" << endl;
+                cin >> s[i].name;
+                fp1.write((char*)&s[i], sizeof(s[i]));
+            }
+            fp1.close();
+            cout << "no of recds " << endl;
+            fp1.open("old", ios::in);
+            for(i = 1; i <=n; i++)
+            {
+                fp1.read((char*)&s[i], sizeof(s[i]));
+                cout << "regno. " << s[i].regno;
+                cout << "name is" << s[i].name << endl;
+
+            }
+            fp1.close();
             break;
+
+        case 2:
+            int deletion;
+            fp1.open("old", ios::in);
+            fp2.open("new", ios::out);
+            cout << "deletion of records " << endl;
+            cout << "enter regno" << endl;
+            cin >> deletion;
+            for(i = 1; i <=n; i++)
+            {
+                fp1.read((char*)&s[i], sizeof(s[i]));
+                if(s[i].regno != deletion)
+                fp2.write((char*)&s[i], sizeof(s[i]));
+
+            }
+            n--;
+            fp1.close();
+            fp2.close();
+            fp1.close("old", ios::out);
+            fp2.open("new", ios::in);
+            cout << "\nAfter deletion" << endl;
+            for(i = 1; i <=n; i++)
+            {
+                fp2.read((char*)&s[i], sizeof(s[i]));
+                cout << "\n\t" << s[i].regno << endl;
+                cout << "\n\t" << s[i].name << endl;
+                fp1.write((char*)&s[i], sizeof(s[i]));
+
+            }
+            fp1.close();
+            fp2.close();
+            break;
+
+        case 3:
+            cout << "\nmodification of record" << endl;
+            fp2.open("old", ios::out | ios::app);
+            cout << "\n Enter the regno " << endl;
+            cin >> s[i].regno;
+            cout << "enter name " << endl;
+            cin >> s[i].name;
+            for(i = 1; i<=n; i++)
+            fp2.write((char*)&s[i],sizeof(s[i]));
+            n++;
+            fp2.close();
+            cout << "new modification " << endl;
+            fp2.open("old", ios::in);
+            fp2.open("new", ios::in);
+            for(i =1 ; i <= n; i++)
+            {
+                fp2.read((char*)&s[i],sizeof(s[i]));
+                fp1.write((char*)&s[i],sizeof(s[i]));
+                cout << "\n\t" << s[i].regno << "\n\t" << s[i].name;
+
+            }
+            fp1.close();
+            fp2.close();
+            break;
+
+
+
+        }
     }
-    printf("%d", c);
+    while(ch < 4);
     return 0;
 }

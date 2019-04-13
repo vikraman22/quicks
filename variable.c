@@ -14,12 +14,6 @@ int check(int arr[], int n)
         }
 }
 
-
-
-
-
-
-
 void main()
 {
     int i, n, arr[100], l;
